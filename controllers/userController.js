@@ -31,9 +31,8 @@ export const login=async(req,res)=> {
     try {
     const {email,password}=req.body
     const user=await User.findOne({email})
-    if(user) {
-    const isMatch=await bcrypt.compare(password,user.password)
-}
+    if(user) 
+    var isMatch=await bcrypt.compare(password,user.password)
     if(!user || !isMatch)
         return res.status(404).json({message:"invalid user or password"})
     generateToken(user._id,res)
@@ -41,7 +40,6 @@ export const login=async(req,res)=> {
         user_id:user._id,
         fullname:user.fullname,
         email:user.email,
-        
     }})
 
     }
@@ -53,12 +51,13 @@ export const login=async(req,res)=> {
 
 export const getUsersProfile=async (req,res)=>{
     try{
-        const loggedInUser=req.User_id
-        const filteredUsers=await User.find({_id:{ne:loggedInUser}}).select('-password')
+        const loggedInUser=req.user
+        console.log(loggedInUser)
+        const filteredUsers=await User.find({_id:{$ne:loggedInUser}}).select('-password')
         res.status(200).json({filteredUsers})
     }     
     catch(err) {
-        res.status(500).send("Internal server error")
+        res.status(500).send("Internal server error "+err)
     }
 }
 export const logout=(req,res)=> {

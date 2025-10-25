@@ -5,8 +5,8 @@ const generateToken=(userId,res)=>{
 const token=jwt.sign({userId},process.env.JWT_SECRET_KEY,{expiresIn:"5d"})
 res.cookie('jwt',token,{
     httpOnly:true,
-    sameSite:'strict',
-    secure:true
+    sameSite:'lax',
+    secure:false
 })
 }
 export default generateToken
